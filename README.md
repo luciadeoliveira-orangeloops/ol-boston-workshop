@@ -35,8 +35,14 @@ cd ol-boston-workshop
 
 Duplicate the example:
 
+#### macOS/Linux:
 ```bash
 cp .env.example .env
+```
+
+#### Windows:
+```powershell
+copy .env.example .env
 ```
 
 Then open `.env` and make sure the following variables exist:
@@ -77,6 +83,8 @@ That URL is your **public endpoint** for ElevenLabs — copy it.
 ### **4️⃣ Verify that everything is running**
 
 **Backend API:**
+
+#### macOS/Linux:
 ```bash
 # Get all products
 curl "http://localhost:3001/api/products"
@@ -85,12 +93,50 @@ curl "http://localhost:3001/api/products"
 curl "http://localhost:3001/api/products?color=blue&category=hoodies"
 ```
 
+#### Windows (PowerShell):
+```powershell
+# Get all products
+Invoke-WebRequest -Uri "http://localhost:3001/api/products" | Select-Object -Expand Content
+
+# Get blue hoodies
+Invoke-WebRequest -Uri "http://localhost:3001/api/products?color=blue&category=hoodies" | Select-Object -Expand Content
+```
+
+#### Windows (CMD with curl):
+```cmd
+REM Get all products
+curl "http://localhost:3001/api/products"
+
+REM Get blue hoodies
+curl "http://localhost:3001/api/products?color=blue&category=hoodies"
+```
+
 **MCP Server:**
+
+#### macOS/Linux:
 ```bash
 # Get all categories
 curl "http://localhost:4000/categories"
 
 # Query products with filters
+curl "http://localhost:4000/query-products?color=blue&category=hoodies"
+```
+
+#### Windows (PowerShell):
+```powershell
+# Get all categories
+Invoke-WebRequest -Uri "http://localhost:4000/categories" | Select-Object -Expand Content
+
+# Query products with filters
+Invoke-WebRequest -Uri "http://localhost:4000/query-products?color=blue&category=hoodies" | Select-Object -Expand Content
+```
+
+#### Windows (CMD with curl):
+```cmd
+REM Get all categories
+curl "http://localhost:4000/categories"
+
+REM Query products with filters
 curl "http://localhost:4000/query-products?color=blue&category=hoodies"
 ```
 
