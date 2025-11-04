@@ -4,68 +4,49 @@ import { pool } from "./db.js";
 export const attributesRouter = Router();
 
 /**
- * GET /api/attributes?master_category=Apparel (opcional)
- * Devuelve los posibles valores para todos los atributos del catálogo.
- * Si pasás master_category, filtra los valores a solo los presentes para esa categoría.
+ * GET /api/attributes
+ * GET /api/attributes?category=Accessories&type=Handbags
+ * Devuelve todos los atributos disponibles (colores, géneros, temporadas, usos)
+ * Opcionalmente filtrado por categoría y/o tipo de artículo
  */
 attributesRouter.get("/", async (req: Request, res: Response) => {
   try {
-    const { master_category } = req.query as { master_category?: string };
-
-    // Usar la vista para obtener todos los atributos disponibles
-    const attrSql = `SELECT * FROM product_attributes;`;
-    const attrResult = await pool.query(attrSql);
+    const { category, type } = req.query;
     
-    if (attrResult.rows.length === 0) {
-      return res.json({
-        genders: [],
-        master_categories: [],
-        sub_categories: [],
-        article_types: [],
-        colours: [],
-        seasons: [],
-        usages: [],
-      });
+    // Build WHERE clause
+    const conditions: string[] = [];
+    const values: any[] = [];
+    
+    if (category) {
+      values.push(String(category));
+      conditions.push(`master_category ILIKE $${values.length}`);
     }
-
-    const attrs = attrResult.rows[0];
-
-    // Si se filtró por master_category, obtener valores específicos
-    if (master_category) {
-      const filterSql = `
-        SELECT 
-          ARRAY_AGG(DISTINCT gender ORDER BY gender) FILTER (WHERE gender IS NOT NULL) as genders,
-          ARRAY_AGG(DISTINCT sub_category ORDER BY sub_category) as sub_categories,
-          ARRAY_AGG(DISTINCT article_type ORDER BY article_type) as article_types,
-          ARRAY_AGG(DISTINCT base_colour ORDER BY base_colour) FILTER (WHERE base_colour IS NOT NULL) as colours,
-          ARRAY_AGG(DISTINCT season ORDER BY season) FILTER (WHERE season IS NOT NULL) as seasons,
-          ARRAY_AGG(DISTINCT usage ORDER BY usage) FILTER (WHERE usage IS NOT NULL) as usages
-        FROM products
-        WHERE master_category ILIKE $1;
-      `;
-      const filterResult = await pool.query(filterSql, [master_category]);
-      const filtered = filterResult.rows[0];
-
-      return res.json({
-        genders: filtered.genders || [],
-        master_categories: [master_category],
-        sub_categories: filtered.sub_categories || [],
-        article_types: filtered.article_types || [],
-        colours: filtered.colours || [],
-        seasons: filtered.seasons || [],
-        usages: filtered.usages || [],
-      });
+    
+    if (type) {
+      values.push(String(type));
+      conditions.push(`article_type ILIKE $${values.length}`);
     }
+    
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+    
+    // Query for all distinct attribute values
+    const colorsSql = `SELECT DISTINCT base_colour as value FROM products ${whereClause} AND base_colour IS NOT NULL ORDER BY base_colour;`;
+    const gendersSql = `SELECT DISTINCT gender as value FROM products ${whereClause} AND gender IS NOT NULL ORDER BY gender;`;
+    const seasonsSql = `SELECT DISTINCT season as value FROM products ${whereClause} AND season IS NOT NULL ORDER BY season;`;
+    const usagesSql = `SELECT DISTINCT usage as value FROM products ${whereClause} AND usage IS NOT NULL ORDER BY usage;`;
+    
+    const [colors, genders, seasons, usages] = await Promise.all([
+      pool.query(colorsSql, values),
+      pool.query(gendersSql, values),
+      pool.query(seasonsSql, values),
+      pool.query(usagesSql, values)
+    ]);
 
-    // Sin filtro, devolver todos
     res.json({
-      genders: attrs.genders || [],
-      master_categories: attrs.master_categories || [],
-      sub_categories: attrs.sub_categories || [],
-      article_types: attrs.article_types || [],
-      colours: attrs.colours || [],
-      seasons: attrs.seasons || [],
-      usages: attrs.usages || [],
+      colors: colors.rows.map(r => r.value),
+      genders: genders.rows.map(r => r.value),
+      seasons: seasons.rows.map(r => r.value),
+      usages: usages.rows.map(r => r.value)
     });
   } catch (err) {
     console.error("Error fetching attributes:", err);

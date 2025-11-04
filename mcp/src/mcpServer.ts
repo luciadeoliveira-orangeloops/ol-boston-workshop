@@ -39,17 +39,17 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
     tools: [
       {
         name: "query_products",
-        description: "Search and filter products by various criteria including categories, attributes, price range, and stock availability",
+        description: "Search and filter products. IMPORTANT: Use get_categories to see main categories (Accessories, Apparel, etc.), then use get_product_types to see specific types (Handbags, Shirts, etc.). The 'category' parameter expects main categories, and 'type' attribute expects specific product types.",
         inputSchema: {
           type: "object",
           properties: {
             category: {
               type: "string",
-              description: "Filter by category name (e.g., 'Footwear', 'Apparel', 'Accessories')"
+              description: "Main category: 'Accessories', 'Apparel', 'Footwear', or 'Personal Care'. Use get_categories to see all available."
             },
             attributes: {
               type: "object",
-              description: "Filter by product attributes (e.g., {'Color': 'Black', 'Size': 'M'})",
+              description: "Filter by attributes. Available keys: 'type' (product type like 'Handbags', 'Shirts'), 'color' (e.g., 'Black', 'Blue'), 'gender' (e.g., 'Men', 'Women'), 'season' (e.g., 'Summer', 'Winter'), 'usage' (e.g., 'Sports', 'Casual'). Use get_product_types and get_attributes to see available values.",
               additionalProperties: { type: "string" }
             },
             minPrice: {
@@ -66,7 +66,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             limit: {
               type: "number",
-              description: "Maximum number of results to return (default: 20)"
+              description: "Maximum number of results to return (default: 100, max: 100)"
             }
           }
         }
@@ -87,18 +87,40 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: "get_categories",
-        description: "Get all available product categories",
+        description: "Get all available product categories (master categories like Apparel, Accessories, Footwear, Personal Care). Use this first to understand the main product categories.",
         inputSchema: {
           type: "object",
           properties: {}
         }
       },
       {
-        name: "get_attributes",
-        description: "Get all available product attributes (e.g., colors, sizes, materials)",
+        name: "get_product_types",
+        description: "Get all available product types (article types) within categories. For example, 'Handbags' is a product type within 'Accessories' category. This helps understand the specific types of products available in each category.",
         inputSchema: {
           type: "object",
-          properties: {}
+          properties: {
+            category: {
+              type: "string",
+              description: "Optional: Filter product types by category (e.g., 'Accessories', 'Apparel')"
+            }
+          }
+        }
+      },
+      {
+        name: "get_attributes",
+        description: "Get all available product attributes (colors, genders, seasons, usages). Can be filtered by category and/or product type to see what attributes are available for specific products.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            category: {
+              type: "string",
+              description: "Optional: Filter attributes by category (e.g., 'Accessories')"
+            },
+            type: {
+              type: "string",
+              description: "Optional: Filter attributes by product type (e.g., 'Handbags')"
+            }
+          }
         }
       }
     ]
@@ -117,15 +139,34 @@ server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest)
         if (args && typeof args === "object") {
           const params = args as any;
           
-          if (params.category) queryParams.append("category", params.category);
-          if (params.minPrice) queryParams.append("minPrice", params.minPrice.toString());
-          if (params.maxPrice) queryParams.append("maxPrice", params.maxPrice.toString());
+          // Map category to master_category (backend expects this)
+          if (params.category) queryParams.append("master_category", params.category);
+          
+          if (params.minPrice) queryParams.append("min_price", params.minPrice.toString());
+          if (params.maxPrice) queryParams.append("max_price", params.maxPrice.toString());
           if (params.inStock !== undefined) queryParams.append("inStock", params.inStock.toString());
           if (params.limit) queryParams.append("limit", params.limit.toString());
           
+          // Map attributes to backend field names
           if (params.attributes && typeof params.attributes === "object") {
+            const attributeMapping: Record<string, string> = {
+              'type': 'article_type',
+              'Type': 'article_type',
+              'color': 'base_colour',
+              'Color': 'base_colour',
+              'style': 'article_type',  // style is also article_type
+              'Style': 'article_type',
+              'season': 'season',
+              'Season': 'season',
+              'usage': 'usage',
+              'Usage': 'usage',
+              'gender': 'gender',
+              'Gender': 'gender'
+            };
+            
             for (const [key, value] of Object.entries(params.attributes)) {
-              queryParams.append(`attr_${key}`, value as string);
+              const backendKey = attributeMapping[key] || key.toLowerCase();
+              queryParams.append(backendKey, value as string);
             }
           }
         }
@@ -175,8 +216,37 @@ server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest)
         };
       }
 
+      case "get_product_types": {
+        const queryParams = new URLSearchParams();
+        
+        if (args && typeof args === "object") {
+          const params = args as any;
+          if (params.category) queryParams.append("category", params.category);
+        }
+        
+        const url = `${BACKEND_URL}/api/categories/types?${queryParams.toString()}`;
+        const data = await fetchBackend(url);
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(data, null, 2)
+            }
+          ]
+        };
+      }
+
       case "get_attributes": {
-        const url = `${BACKEND_URL}/api/attributes`;
+        const queryParams = new URLSearchParams();
+        
+        if (args && typeof args === "object") {
+          const params = args as any;
+          if (params.category) queryParams.append("category", params.category);
+          if (params.type) queryParams.append("type", params.type);
+        }
+
+        const url = `${BACKEND_URL}/api/attributes?${queryParams.toString()}`;
         const data = await fetchBackend(url);
 
         return {
