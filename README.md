@@ -31,32 +31,7 @@ cd ol-boston-workshop
 
 ---
 
-### **2️⃣ Verify your setup (optional but recommended)**
-
-Before starting, you can run our verification script to check if all requirements are installed:
-
-#### macOS/Linux:
-```bash
-./check-setup.sh
-```
-
-#### Windows (PowerShell):
-```powershell
-.\check-setup.ps1
-```
-
-The script will check:
-- ✓ Docker Desktop installation and status
-- ✓ Git installation
-- ✓ VS Code installation (optional)
-- ✓ `.env` file configuration
-- ✓ Ngrok authtoken setup
-
-Fix any issues before proceeding to the next step.
-
----
-
-### **3️⃣ Create your environment file**
+### **2️⃣ Create your environment file**
 
 Duplicate the example:
 
@@ -81,6 +56,31 @@ PORT=4000
 
 NGROK_AUTHTOKEN=your_ngrok_token_here
 ```
+
+---
+
+### **3️⃣ Verify your setup (optional but recommended)**
+
+Before starting, you can run our verification script to check if all requirements are installed:
+
+#### macOS/Linux:
+```bash
+./check-setup.sh
+```
+
+#### Windows (PowerShell):
+```powershell
+.\check-setup.ps1
+```
+
+The script will check:
+- ✓ Docker Desktop installation and status
+- ✓ Git installation
+- ✓ VS Code installation (optional)
+- ✓ `.env` file configuration
+- ✓ Ngrok authtoken setup
+
+Fix any issues before proceeding to the next step.
 
 ---
 
