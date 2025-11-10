@@ -24,6 +24,21 @@ export async function intentDetectionNode(
       throw new Error("No transcribed text available");
     }
 
+    // Fetch available categories and attributes from the database
+    const [categoriesResponse, attributesResponse] = await Promise.all([
+      fetch(`${process.env.MCP_SERVER_URL || "http://mcp:4000"}/categories`),
+      fetch(`${process.env.MCP_SERVER_URL || "http://mcp:4000"}/attributes`),
+    ]);
+
+    const categories = (await categoriesResponse.json()) as string[];
+    const attributes = (await attributesResponse.json()) as {
+      article_types: string[];
+      colours: string[];
+      genders: string[];
+      seasons: string[];
+      usages: string[];
+    };
+
     const model = new ChatOpenAI({
       modelName: "gpt-4o-mini",
       temperature: 0,
@@ -34,37 +49,55 @@ export async function intentDetectionNode(
 Available intents:
 - "stock": User wants to check stock availability for a specific product ID (needs numeric productId)
 - "policy": User asks about store policies (returns, refund, shipping, warranty, etc.)
-- "product_search": User wants to search/find products by attributes (category, type, color, size, price, pattern, gender, etc.)
+- "product_search": User wants to search/find products by attributes (category, type, color, size, price, pattern, gender, brand, etc.) OR asks about stock of products by description
 - "categories": User wants to know what categories or product types are available
 - "general": General greeting or conversation
 - "unknown": Cannot determine intent
 
 User query: "${state.transcribedText}"
 
+=== DATABASE SCHEMA ===
+Available Categories (use EXACTLY these values): ${JSON.stringify(categories)}
+Available Product Types (article_types - use EXACTLY these values): ${JSON.stringify(attributes.article_types)}
+Available Colors (use EXACTLY these values): ${JSON.stringify(attributes.colours)}
+Available Genders (use EXACTLY these values): ${JSON.stringify(attributes.genders)}
+Available Seasons (use EXACTLY these values): ${JSON.stringify(attributes.seasons)}
+Available Usages (use EXACTLY these values): ${JSON.stringify(attributes.usages)}
+
 IMPORTANT extraction rules:
-1. For product_search, extract ALL relevant attributes:
-   - category: Main category (Accessories, Apparel, Footwear, Personal Care)
-   - attributes.type: Product type (Shirts, Hoodies, Jeans, Handbags, etc.) - ALWAYS extract from words like "shirts", "hoodies", "jeans"
-   - attributes.color: Color (Blue, Black, Red, etc.)
-   - attributes.gender: Gender (Men, Women, Unisex)
-   - attributes.season: Season (Summer, Winter, etc.)
-   - attributes.usage: Usage (Sports, Casual, Formal, etc.)
-   - attributes.pattern: Pattern (Printed, Solid, Striped, etc.) - extract from words like "printed", "plain"
+1. For product_search, extract ALL relevant attributes using EXACT values from the schema above:
+   - category: Main category - MUST be one of: ${categories.join(", ")}
+   - attributes.type: Product type - MUST be one of the article_types above (e.g., "Backpacks", "Shirts", "Handbags")
+   - attributes.color: Color - MUST be one of the colours above
+   - attributes.gender: Gender - MUST be one of the genders above
+   - attributes.season: Season - MUST be one of the seasons above
+   - attributes.usage: Usage - MUST be one of the usages above
+   - searchTerm: Brand name or specific product name to search in product display name (extract brand names like "Nike", "Myntra", "Wildcraft", "Ray-Ban", "Adidas", "Puma", etc.)
    - maxPrice: Maximum price (extract from "under $X", "less than $X")
    - minPrice: Minimum price (extract from "over $X", "more than $X")
-   - size: Size (S, M, L, XL, etc.) - store in attributes.size
+   - inStock: Set to true if user explicitly asks about stock availability or "in stock"
 
-2. For stock checks: only if user asks about stock of a SPECIFIC NUMERIC product ID
-3. For categories: if user asks "what categories", "what types", "what do you have"
+2. For stock checks: only if user asks about stock of a SPECIFIC NUMERIC product ID (e.g., "product 12345")
+3. For categories: if user ONLY asks "what categories", "what types do you sell" without looking for specific products
 4. For policy: if user asks about "return", "refund", "shipping", "warranty", "exchange", etc.
 
+CRITICAL MATCHING RULES:
+- When user says "backpack" → map to "Backpacks" (use the exact plural form from article_types)
+- When user says "shirt" → map to "Shirts"
+- When user says "shoe" → map to "Casual Shoes", "Sports Shoes", or "Formal Shoes" based on context
+- When user mentions "footwear", "all footwear", "shoes" generally → use category: "Footwear" (do NOT use attributes.type)
+- When user mentions a brand name, ALWAYS extract it as searchTerm
+- Use fuzzy matching to find the closest match in the available values
+
 Examples:
-- "Find blue hoodies in size M under $60" → intent: product_search, params: {attributes: {type: "Hoodies", color: "Blue", size: "M"}, maxPrice: 60}
+- "Find blue hoodies in size M under $60" → intent: product_search, params: {attributes: {color: "Blue"}, maxPrice: 60} (Note: hoodies not in DB)
 - "Do you have black shirts in stock?" → intent: product_search, params: {attributes: {type: "Shirts", color: "Black"}, inStock: true}
+- "How many Myntra shirts are in stock?" → intent: product_search, params: {searchTerm: "Myntra", attributes: {type: "Shirts"}, inStock: true}
+- "What's the price of the Wildcraft backpack?" → intent: product_search, params: {searchTerm: "Wildcraft", attributes: {type: "Backpacks"}}
+- "Show me all footwear products" → intent: product_search, params: {category: "Footwear"}
+- "Do you have Nike shoes?" → intent: product_search, params: {searchTerm: "Nike", category: "Footwear"}
 - "What categories are available?" → intent: categories
-- "Show me printed jeans" → intent: product_search, params: {attributes: {type: "Jeans", pattern: "Printed"}}
 - "Tell me about the refund policy" → intent: policy, params: {policyType: "refund"}
-- "What should I do to return a product?" → intent: policy, params: {policyType: "returns"}
 - "Do you have product 12345 in stock?" → intent: stock, params: {productId: "12345"}
 
 Respond in JSON format: { "intent": "...", "confidence": 0.95, "params": {...}, "reasoning": "..." }`;

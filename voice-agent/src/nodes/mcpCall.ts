@@ -81,9 +81,19 @@ export async function mcpCallNode(
           
           // Parse and format the response
           const stockData = JSON.parse(mcpResponse);
-          const responseText = stockData.inStock
-            ? `Yes, product ${productId} is in stock. We have ${stockData.quantity} units available.`
-            : `Sorry, product ${productId} is currently out of stock.`;
+          
+          if (!stockData.found) {
+            return {
+              mcpToolName,
+              mcpResponse,
+              responseText: `I couldn't find product ${productId} in our catalog.`,
+            };
+          }
+          
+          const stock = stockData.stock || 0;
+          const responseText = stock > 0
+            ? `Yes, product ${productId} (${stockData.product_display_name}) is in stock. We have ${stock} units available.`
+            : `Sorry, product ${productId} (${stockData.product_display_name}) is currently out of stock.`;
           
           return { mcpToolName, mcpResponse, responseText };
         } catch (error) {
@@ -153,6 +163,11 @@ export async function mcpCallNode(
             searchParams.category = params.category;
           }
           
+          // Map searchTerm (for brand/product name searches)
+          if (params.searchTerm) {
+            searchParams.searchTerm = params.searchTerm;
+          }
+          
           // Map attributes, cleaning up problematic fields
           if (params.attributes) {
             searchParams.attributes = {};
@@ -219,11 +234,19 @@ export async function mcpCallNode(
           .map((p: any) => {
             const name = p.productName || p.product_name || p.productDisplayName || p.product_display_name || "Unknown product";
             const price = p.price || "price not available";
-            return `${name} for $${price}`;
+            const stock = p.stock !== undefined ? ` (${p.stock} in stock)` : '';
+            return `${name} for $${price}${stock}`;
           })
           .join(", ");
         
-        const responseText = `I found ${count} product${count > 1 ? 's' : ''}. Here are some options: ${productList}${count > 3 ? ', and more' : ''}.`;
+        // Customize response based on whether stock was requested
+        let responseText = `I found ${count} product${count > 1 ? 's' : ''}. Here are some options: ${productList}${count > 3 ? ', and more' : ''}.`;
+        
+        // If stock was requested, add total stock count
+        if (searchParams.inStock) {
+          const totalStock = products.reduce((sum: number, p: any) => sum + (p.stock || 0), 0);
+          responseText = `I found ${count} product${count > 1 ? 's' : ''} in stock with a total of ${totalStock} units available. Here are some options: ${productList}${count > 3 ? ', and more' : ''}.`;
+        }
         
         return { mcpToolName, mcpResponse, responseText };
       }

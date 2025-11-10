@@ -64,6 +64,10 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               type: "boolean",
               description: "Filter for products in stock"
             },
+            searchTerm: {
+              type: "string",
+              description: "Search for products by brand name or product name (e.g., 'Nike', 'Wildcraft', 'Myntra')"
+            },
             limit: {
               type: "number",
               description: "Maximum number of results to return (default: 100, max: 100)"
@@ -146,6 +150,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest)
           if (params.maxPrice) queryParams.append("max_price", params.maxPrice.toString());
           if (params.inStock !== undefined) queryParams.append("inStock", params.inStock.toString());
           if (params.limit) queryParams.append("limit", params.limit.toString());
+          if (params.searchTerm) queryParams.append("search", params.searchTerm);
           
           // Map attributes to backend field names
           if (params.attributes && typeof params.attributes === "object") {
@@ -189,7 +194,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest)
           throw new Error("productId is required");
         }
 
-        const url = `${BACKEND_URL}/api/stock/${(args as any).productId}`;
+        const url = `${BACKEND_URL}/api/stock?id=${(args as any).productId}`;
         const data = await fetchBackend(url);
 
         return {

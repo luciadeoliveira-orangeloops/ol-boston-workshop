@@ -21,9 +21,10 @@ productsRouter.get("/", async (req: Request, res: Response) => {
       min_price,
       max_price,
       year,
+      search,
     } = req.query;
 
-    console.log('Products API - Query params:', { id, gender, master_category, sub_category, article_type });
+    console.log('Products API - Query params:', { id, gender, master_category, sub_category, article_type, search });
 
     const conditions: string[] = [];
     const values: any[] = [];
@@ -72,6 +73,10 @@ productsRouter.get("/", async (req: Request, res: Response) => {
     if (max_price) {
       values.push(Number(max_price));
       conditions.push(`price <= $${values.length}`);
+    }
+    if (search) {
+      values.push(`%${String(search)}%`);
+      conditions.push(`product_display_name ILIKE $${values.length}`);
     }
 
     const whereClause =
