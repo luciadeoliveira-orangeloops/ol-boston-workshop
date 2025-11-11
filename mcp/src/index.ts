@@ -51,7 +51,7 @@ app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'OPTIONS', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Last-Event-ID', 'Mcp-Session-Id'],
-  exposedHeaders: ['Mcp-Session-Id'],
+  exposedHeaders: ['Mcp-Session-Id', 'Content-Type'],
   credentials: true
 }));
 
@@ -104,6 +104,9 @@ function handleSSEStream(req: Request, res: Response) {
   
   if (!sessionId) {
     sessionId = randomUUID();
+    console.log(`🆕 Creating new SSE session: ${sessionId}`);
+  } else {
+    console.log(`🔄 Using existing session ID: ${sessionId}`);
   }
 
   // Set up SSE headers all at once
@@ -111,10 +114,17 @@ function handleSSEStream(req: Request, res: Response) {
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
   res.setHeader("Mcp-Session-Id", sessionId);
+  res.setHeader("Access-Control-Expose-Headers", "Mcp-Session-Id");
   res.flushHeaders();
 
   // Handle resumption with Last-Event-ID
   const lastEventId = req.headers["last-event-id"] as string;
+  
+  // Check if session already exists
+  const existingClient = sessions.get(sessionId);
+  if (existingClient) {
+    console.log(`⚠️  Session ${sessionId} already exists, replacing with new connection`);
+  }
   
   const client: SSEClient = {
     sessionId,
@@ -127,7 +137,7 @@ function handleSSEStream(req: Request, res: Response) {
 
   console.log(`✅ SSE connection established for session: ${sessionId}`);
 
-  // Send initial connection confirmation
+  // Send initial connection confirmation (optional, some clients don't need this)
   sendSSEMessage(client, {
     jsonrpc: "2.0",
     method: "connection/established",
@@ -216,6 +226,7 @@ app.post("/mcp", async (req: Request, res: Response) => {
           // Generate session ID if not provided
           if (!newSessionId) {
             newSessionId = randomUUID();
+            console.log(`🆕 Generated new session ID: ${newSessionId}`);
           }
           
           // Support multiple protocol versions
@@ -317,9 +328,10 @@ app.post("/mcp", async (req: Request, res: Response) => {
       } else {
         // No SSE session - fall back to direct JSON response
         // This is allowed for clients that don't use SSE
-        console.log(`📤 Sending direct JSON response (no SSE session)`);
+        console.log(`📤 Sending direct JSON response (no SSE session)${newSessionId ? ` with session ID: ${newSessionId}` : ''}`);
         
-        if (newSessionId && request.method === "initialize") {
+        // Always set session ID header if we have one (especially for initialize)
+        if (newSessionId) {
           res.setHeader("Mcp-Session-Id", newSessionId);
         }
         
