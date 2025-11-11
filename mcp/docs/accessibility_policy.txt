@@ -1,11 +1,11 @@
-Acme Apparel - Accessibility Commitment
+RetailCo - Accessibility Commitment
 
 1. Statement
-Acme is committed to providing a website and shopping experience that is accessible to people with disabilities and meets recognized accessibility standards where feasible.
+RetailCo is committed to providing a website and shopping experience that is accessible to people with disabilities and meets recognized accessibility standards where feasible.
 
 2. Standards & Improvements
 - We strive to follow WCAG 2.1 AA best practices and continuously improve based on audits and customer feedback.
-- Feedback regarding accessibility issues can be sent to accessibility@acme-apparel.example.
+- Feedback regarding accessibility issues can be sent to accessibility@retailco.example.
 
 3. Assistive Services
-- Acme may offer additional assistance during the purchase process (e.g., voice interaction, dedicated support channels) to accommodate diverse needs.
+- RetailCo may offer additional assistance during the purchase process (e.g., voice interaction, dedicated support channels) to accommodate diverse needs.

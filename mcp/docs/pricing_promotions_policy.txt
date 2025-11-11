@@ -1,7 +1,7 @@
-Acme Apparel - Pricing & Promotions Policy
+RetailCo - Pricing & Promotions Policy
 
 1. Accuracy & Errors
-- Acme attempts to provide accurate pricing information but reserves the right to correct errors and cancel orders where a pricing error is identified.
+- RetailCo attempts to provide accurate pricing information but reserves the right to correct errors and cancel orders where a pricing error is identified.
 
 2. Price Adjustments & Price Guarantees
 - Price adjustments after purchase are handled per promotional rules; general price-matching guarantees are not offered unless explicitly stated in a promotional campaign.

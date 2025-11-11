@@ -1,9 +1,9 @@
-Acme Apparel - Returns & Refunds Policy
+RetailCo - Returns & Refunds Policy
 
 Effective date: 2025-01-01
 
 1. Overview
-Acme Apparel accepts returns of unworn, unaltered merchandise within thirty (30) calendar days of delivery for a full refund to the original form of payment, subject to the conditions detailed below. This policy applies to merchandise purchased from any Acme Apparel online store, authorized retailer partner sites, and Acme-owned physical stores unless otherwise specified.
+RetailCo accepts returns of unworn, unaltered merchandise within thirty (30) calendar days of delivery for a full refund to the original form of payment, subject to the conditions detailed below. This policy applies to merchandise purchased from any RetailCo online store, authorized retailer partner sites, and RetailCo-owned physical stores unless otherwise specified.
 
 2. Eligibility
 - Items must be in original condition: unworn, unwashed, with original tags and packaging intact.
@@ -14,21 +14,21 @@ Acme Apparel accepts returns of unworn, unaltered merchandise within thirty (30)
 3. Return Window & Process
 - Standard returns: Initiate within 30 days of delivery.
 - Extended exceptions: Items reported damaged or defective at delivery may be eligible for returns within 60 days and will be handled as priority cases.
-- Return Authorization: Customers must request a Return Authorization (RA) through the support portal or through the Acme in-site assistant. Returns without RA may be refused.
-- Shipping: Acme provides prepaid return labels for eligible domestic returns over the minimum return threshold (see Shipping Policy). For returns below the threshold or international returns, shipping costs may apply and be deducted from the refund, unless the return is due to our error.
+- Return Authorization: Customers must request a Return Authorization (RA) through the support portal or through the RetailCo in-site assistant. Returns without RA may be refused.
+- Shipping: RetailCo provides prepaid return labels for eligible domestic returns over the minimum return threshold (see Shipping Policy). For returns below the threshold or international returns, shipping costs may apply and be deducted from the refund, unless the return is due to our error.
 
 4. Refund Timeline & Method
 - Once the returned item is received and inspected at our returns facility, refunds are processed within five to seven (5–7) business days.
-- Refunds are issued to the original form of payment. If the original method is unavailable (e.g., expired card), store credit may be issued at Acme’s discretion.
+- Refunds are issued to the original form of payment. If the original method is unavailable (e.g., expired card), store credit may be issued at RetailCo’s discretion.
 - For expedited refunds or exchanges, contact support and reference your RA number.
 
 5. Damaged, Defective, or Incorrect Items
 - If you receive a damaged or incorrect item, contact customer support immediately and provide photos of the item and packaging. We will arrange a return or exchange and cover return shipping in verified cases.
 
 6. Partial Refunds & Restocking
-- Partial refunds may be issued for returned items that show signs of wear, missing parts, or missing tags. Acme reserves the right to deduct reasonable restocking fees where applicable, and to refuse returns for items not meeting the policy criteria.
+- Partial refunds may be issued for returned items that show signs of wear, missing parts, or missing tags. RetailCo reserves the right to deduct reasonable restocking fees where applicable, and to refuse returns for items not meeting the policy criteria.
 
 7. Exceptions & Adjustments
 - Promotional discounts, gift cards, and loyalty redemptions may affect refund amounts; refunds will reflect the payment actually processed. In some cases, refunds may be issued as store credit.
 - For third-party resellers or marketplace purchases, please refer to the seller’s return policy.
-- Acme retains the right to update these terms; material changes will be posted with an updated effective date.
+- RetailCo retains the right to update these terms; material changes will be posted with an updated effective date.

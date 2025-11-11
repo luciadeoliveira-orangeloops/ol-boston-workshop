@@ -1,7 +1,7 @@
-Acme Apparel - Customer Support SLA & Response Times
+RetailCo - Customer Support SLA & Response Times
 
 1. Support Channels
-- Email: support@acme-apparel.example
+- Email: support@retailco.example
 - In-site assistant: available during business hours
 - Phone support: available in select markets (hours listed on Contact page)
 

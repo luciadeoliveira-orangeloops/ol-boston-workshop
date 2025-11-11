@@ -1,23 +1,23 @@
-Acme Apparel - Terms of Service
+RetailCo - Terms of Service
 
 Effective date: 2025-01-01
 
 1. Agreement to Terms
-By accessing or using Acme's website and services, you agree to be bound by these Terms of Service and any additional policies referenced herein.
+By accessing or using RetailCo's website and services, you agree to be bound by these Terms of Service and any additional policies referenced herein.
 
 2. Purchases & Orders
 - All purchases are subject to product availability and confirmation of the order price.
-- Acme reserves the right to refuse or cancel any order for any reason, including product or pricing errors.
+- RetailCo reserves the right to refuse or cancel any order for any reason, including product or pricing errors.
 
 3. User Conduct & Acceptable Use
-- Users must not engage in abusive, fraudulent, or illegal behavior while using Acme services.
+- Users must not engage in abusive, fraudulent, or illegal behavior while using RetailCo services.
 - Unauthorized access, scraping, or data harvesting is prohibited.
 
 4. Intellectual Property
-- All content on the site (text, images, trademarks) is owned by Acme or licensed to Acme. Users may not reproduce or redistribute content without permission.
+- All content on the site (text, images, trademarks) is owned by RetailCo or licensed to RetailCo. Users may not reproduce or redistribute content without permission.
 
 5. Limitation of Liability & Disclaimers
-- Acme's liability is limited to the maximum extent permitted by applicable law. We disclaim implicit warranties to the fullest extent allowed.
+- RetailCo's liability is limited to the maximum extent permitted by applicable law. We disclaim implicit warranties to the fullest extent allowed.
 
 6. Governing Law
 - These Terms are governed by the laws of the State of New York (or an agreed jurisdiction), and disputes shall be resolved in specified courts unless arbitration is agreed.

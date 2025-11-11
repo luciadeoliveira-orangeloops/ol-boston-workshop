@@ -1,4 +1,4 @@
-Acme Apparel - Loyalty Program Terms
+RetailCo - Loyalty Program Terms
 
 1. Overview
 - Members earn points for purchases and engagement. Points can be redeemed for discounts or exclusive benefits subject to program terms.
@@ -10,4 +10,4 @@ Acme Apparel - Loyalty Program Terms
 - Points may expire after extended periods of inactivity; details are published in the membership portal.
 
 4. Program Changes
-- Acme reserves the right to modify or terminate the program with notice to members.
+- RetailCo reserves the right to modify or terminate the program with notice to members.

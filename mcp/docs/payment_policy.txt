@@ -1,11 +1,11 @@
-Acme Apparel - Payment & Pricing Policy
+RetailCo - Payment & Pricing Policy
 
 1. Accepted Methods
 - Major credit and debit cards (Visa, MasterCard, American Express), PayPal, and select regional payment methods where available.
 - Gift cards and store credit may be used per the gift card terms.
 
 2. Pricing Errors
-- While we strive for accuracy, pricing errors may occur. If an item is listed at an incorrect price, Acme reserves the right to refuse or cancel the order and notify the customer.
+- While we strive for accuracy, pricing errors may occur. If an item is listed at an incorrect price, RetailCo reserves the right to refuse or cancel the order and notify the customer.
 
 3. Promotions & Discounts
 - Promotional codes are subject to terms and limited to one use per order unless stated otherwise.

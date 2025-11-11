@@ -1,7 +1,7 @@
-Acme Apparel - Supplier Code of Conduct
+RetailCo - Supplier Code of Conduct
 
 1. Purpose
-Acme expects suppliers and manufacturing partners to adhere to ethical labor practices, environmental compliance, and legal standards.
+RetailCo expects suppliers and manufacturing partners to adhere to ethical labor practices, environmental compliance, and legal standards.
 
 2. Labor & Human Rights
 - No forced labor or child labor. Respect for freedom of association and safe working conditions is required.
@@ -10,4 +10,4 @@ Acme expects suppliers and manufacturing partners to adhere to ethical labor pra
 - Suppliers must comply with applicable environmental laws and strive to reduce waste, emissions, and resource consumption.
 
 4. Monitoring & Audits
-- Acme reserves the right to audit suppliers and require corrective action plans for non-compliance.
+- RetailCo reserves the right to audit suppliers and require corrective action plans for non-compliance.

@@ -1,7 +1,7 @@
-Acme Apparel - Product Recall Policy
+RetailCo - Product Recall Policy
 
 1. Overview
-- In the rare event that a product is found to present a safety risk, Acme will coordinate recalls in consultation with regulatory authorities and affected stakeholders.
+- In the rare event that a product is found to present a safety risk, RetailCo will coordinate recalls in consultation with regulatory authorities and affected stakeholders.
 
 2. Notification & Remediation
-- Affected customers will be notified via email and public notice, and Acme will provide return or replacement instructions along with remediation measures.
+- Affected customers will be notified via email and public notice, and RetailCo will provide return or replacement instructions along with remediation measures.

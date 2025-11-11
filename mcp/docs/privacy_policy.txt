@@ -1,13 +1,13 @@
-Acme Apparel - Privacy Policy
+RetailCo - Privacy Policy
 
 Effective date: 2025-01-01
 
 1. Introduction
-Acme Apparel ("we," "us," "our") is committed to protecting the privacy and security of personal information collected from customers. This Privacy Policy explains what information we collect, how we use it, how we protect it, and customer choices regarding their personal data.
+RetailCo ("we," "us," "our") is committed to protecting the privacy and security of personal information collected from customers. This Privacy Policy explains what information we collect, how we use it, how we protect it, and customer choices regarding their personal data.
 
 2. Information We Collect
 - Account Information: name, email address, billing/shipping addresses, phone number.
-- Payment Information: payment card details are processed via third-party payment processors; Acme does not store raw card numbers in production systems.
+- Payment Information: payment card details are processed via third-party payment processors; RetailCo does not store raw card numbers in production systems.
 - Order Data: order history, product preferences, returns/exchanges history.
 - Device & Usage Data: IP address, browser type, device identifiers, cookies, and interaction data.
 - Communications: customer service interactions, chat transcripts, support tickets (may be recorded for quality and training purposes).
@@ -23,7 +23,7 @@ Acme Apparel ("we," "us," "our") is committed to protecting the privacy and secu
 
 5. Sharing & Third Parties
 - We share data with service providers (payment processors, logistics partners, analytics providers) under data processing agreements.
-- Acme will not sell personal data to third parties. We may share aggregated or anonymized data for analytical purposes.
+- RetailCo will not sell personal data to third parties. We may share aggregated or anonymized data for analytical purposes.
 
 6. International Transfers & Security
 - Data may be transferred to jurisdictions outside your country; we apply appropriate safeguards (standard contractual clauses, adequacy decisions) where required.
@@ -31,7 +31,7 @@ Acme Apparel ("we," "us," "our") is committed to protecting the privacy and secu
 
 7. User Rights
 - Users can request access, correction, deletion, or portability of personal data subject to applicable laws.
-- To exercise rights, contact privacy@acme-apparel.example with verifiable identity information.
+- To exercise rights, contact privacy@retailco.example with verifiable identity information.
 
 8. Cookies & Tracking
 - Our site uses cookies and similar technologies for functionality, analytics, and advertising. Users can manage cookie preferences through the cookie banner and account settings.

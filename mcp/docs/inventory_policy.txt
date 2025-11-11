@@ -1,7 +1,7 @@
-Acme Apparel - Inventory & Backorder Policy
+RetailCo - Inventory & Backorder Policy
 
 1. Inventory Accuracy
-- Acme strives to maintain accurate stock counts; however, occasional discrepancies may occur due to concurrent sales across channels or inventory timing differences.
+- RetailCo strives to maintain accurate stock counts; however, occasional discrepancies may occur due to concurrent sales across channels or inventory timing differences.
 
 2. Backorders & Preorders
 - When items are on backorder, estimated ship dates will be provided. Customers may cancel backorders prior to shipment for a full refund.

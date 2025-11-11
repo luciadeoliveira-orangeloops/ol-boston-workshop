@@ -1,4 +1,4 @@
-Acme Apparel - Shipping Policy
+RetailCo - Shipping Policy
 
 Effective date: 2025-01-01
 
@@ -17,14 +17,14 @@ Effective date: 2025-01-01
 
 4. Tracking & Notifications
 - Customers receive an email with tracking information once the order ships. Tracking availability and granularity vary by carrier.
-- Acme is not liable for carrier transit delays once a shipment is accepted by the carrier, but we will assist in filing claims when shipments are lost or damaged in transit.
+- RetailCo is not liable for carrier transit delays once a shipment is accepted by the carrier, but we will assist in filing claims when shipments are lost or damaged in transit.
 
 5. International Duties & Taxes
-- International shipments may be subject to import duties, taxes, and customs clearance fees. These charges are the responsibility of the recipient unless Acme explicitly indicates otherwise at checkout (e.g., DDP shipments).
-- Acme provides customs documentation as required for international shipments.
+- International shipments may be subject to import duties, taxes, and customs clearance fees. These charges are the responsibility of the recipient unless RetailCo explicitly indicates otherwise at checkout (e.g., DDP shipments).
+- RetailCo provides customs documentation as required for international shipments.
 
 6. Returns Shipping
-- Return labels are provided at no cost for eligible domestic returns over the free-shipping threshold. For other returns (including most international returns), return shipping costs apply and may be deducted from the refund unless the return is due to an Acme error.
+- Return labels are provided at no cost for eligible domestic returns over the free-shipping threshold. For other returns (including most international returns), return shipping costs apply and may be deducted from the refund unless the return is due to an RetailCo error.
 
 7. Lost or Damaged Shipments
 - If an order is lost or arrives damaged, customers must notify support within 7 days of reported delivery (or as soon as reasonably possible) to qualify for investigation and remediation.
