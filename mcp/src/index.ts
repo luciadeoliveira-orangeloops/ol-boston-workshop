@@ -96,8 +96,21 @@ app.get("/openapi.json", (_req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, "..", "openapi.json"));
 });
 
-app.get("/", (_req: Request, res: Response) => res.send("🟣 MCP Server running"));
-app.get("/health", (_req: Request, res: Response) => res.json({ status: "ok", service: "mcp" }));
+app.get("/", (_req: Request, res: Response) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.send("🟣 MCP Server running");
+});
+
+app.get("/health", (_req: Request, res: Response) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.json({ 
+    status: "ok", 
+    service: "mcp",
+    protocol: "mcp",
+    protocolVersion: "2024-11-05",
+    transport: ["http", "sse"]
+  });
+});
 
 // ============================================================================
 // MCP DISCOVERY ENDPOINT (GET /mcp without SSE)
@@ -112,7 +125,7 @@ function handleDiscovery(_req: Request, res: Response) {
     name: "workshop-retail-catalog",
     version: "1.0.0",
     protocol: "mcp",
-    protocolVersion: "2025-03-26",
+    protocolVersion: "2024-11-05",
     description: "Retail product catalog with search and policy documents",
     capabilities: {
       tools: true,

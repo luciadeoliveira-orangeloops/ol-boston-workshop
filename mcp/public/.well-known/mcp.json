@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "workshop-retail-catalog": {
-      "url": "https://f26e0ab67604.ngrok-free.app/mcp",
-      "transport": "http-sse"
+      "url": "https://fsvdcoej2h.execute-api.us-east-1.amazonaws.com/dev/mcp",
+      "transport": "sse"
     }
   }
 }
