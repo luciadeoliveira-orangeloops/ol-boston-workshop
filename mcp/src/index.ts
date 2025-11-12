@@ -47,16 +47,46 @@ function sendSSEMessage(client: SSEClient, data: any) {
   return eventId;
 }
 
-// CORS configuration for MCP
+// CORS configuration for MCP - Enhanced for ElevenLabs compatibility
 app.use(cors({
   origin: '*',
-  methods: ['GET', 'POST', 'OPTIONS', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Last-Event-ID', 'Mcp-Session-Id'],
-  exposedHeaders: ['Mcp-Session-Id', 'Content-Type'],
-  credentials: true
+  methods: ['GET', 'POST', 'OPTIONS', 'DELETE', 'PUT', 'PATCH'],
+  allowedHeaders: [
+    'Content-Type', 
+    'Authorization', 
+    'Accept', 
+    'Last-Event-ID', 
+    'Mcp-Session-Id',
+    'X-Requested-With',
+    'Origin',
+    'User-Agent',
+    'Cache-Control',
+    'Pragma'
+  ],
+  exposedHeaders: [
+    'Mcp-Session-Id', 
+    'Content-Type',
+    'Content-Length',
+    'ETag',
+    'Date',
+    'Connection',
+    'X-Powered-By'
+  ],
+  credentials: false, // Changed to false for better compatibility with cloud services
+  maxAge: 86400 // 24 hours - cache preflight requests
 }));
 
 app.use(express.json());
+
+// Enhanced OPTIONS handling for better CORS preflight support
+app.options('*', (req: Request, res: Response) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, DELETE, PUT, PATCH');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept, Last-Event-ID, Mcp-Session-Id, X-Requested-With, Origin, User-Agent, Cache-Control, Pragma');
+  res.setHeader('Access-Control-Expose-Headers', 'Mcp-Session-Id, Content-Type, Content-Length, ETag, Date, Connection, X-Powered-By');
+  res.setHeader('Access-Control-Max-Age', '86400');
+  res.status(204).end();
+});
 
 // Serve static files from public directory (for .well-known and openapi.json)
 app.use(express.static(path.join(__dirname, "..", "public")));
@@ -74,6 +104,10 @@ app.get("/health", (_req: Request, res: Response) => res.json({ status: "ok", se
 // ============================================================================
 // This is called when Accept header does NOT include text/event-stream
 function handleDiscovery(_req: Request, res: Response) {
+  // Ensure CORS headers are set
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Expose-Headers', 'Content-Type, Content-Length');
+  
   res.json({
     name: "workshop-retail-catalog",
     version: "1.0.0",
@@ -172,13 +206,6 @@ app.get("/mcp", (req: Request, res: Response) => {
 // ============================================================================
 // POST /mcp - Handle JSON-RPC Requests
 // ============================================================================
-// ============================================================================
-// POST /mcp - Handle JSON-RPC Requests
-// ============================================================================
-app.options("/mcp", (_req: Request, res: Response) => {
-  res.status(200).end();
-});
-
 app.post("/mcp", async (req: Request, res: Response) => {
   console.log("📨 MCP POST request received:", JSON.stringify(req.body, null, 2));
   console.log("📋 Headers:", JSON.stringify({
@@ -187,6 +214,10 @@ app.post("/mcp", async (req: Request, res: Response) => {
     'mcp-session-id': req.headers['mcp-session-id'],
     'origin': req.headers.origin
   }, null, 2));
+  
+  // Ensure CORS headers are always set for responses
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Expose-Headers', 'Mcp-Session-Id, Content-Type, Content-Length');
   
   try {
     const request = req.body;
