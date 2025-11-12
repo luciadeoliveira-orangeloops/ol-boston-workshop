@@ -220,12 +220,20 @@ function handleSSEStream(req: Request, res: Response) {
 // ============================================================================
 app.get("/mcp", (req: Request, res: Response) => {
   const acceptHeader = req.headers.accept || "";
+  const viaHeader = req.headers.via || "";
   
   console.log(`📥 GET /mcp - Accept header: ${acceptHeader}`);
-  console.log(`📥 GET /mcp - All headers:`, JSON.stringify(req.headers, null, 2));
+  console.log(`📥 GET /mcp - Via header: ${viaHeader}`);
   
-  // Only use SSE if ONLY text/event-stream is requested (not mixed with application/json)
-  if (acceptHeader === "text/event-stream" || 
+  // NEVER use SSE when coming through API Gateway (it doesn't support long-lived connections)
+  // API Gateway adds "via: AmazonAPIGateway" header
+  const isFromAPIGateway = viaHeader.includes("AmazonAPIGateway");
+  
+  if (isFromAPIGateway) {
+    console.log(`🚫 Request from API Gateway detected - using JSON discovery instead of SSE`);
+    console.log(`   (API Gateway doesn't support long-lived SSE connections)`);
+    handleDiscovery(req, res);
+  } else if (acceptHeader === "text/event-stream" || 
       (acceptHeader.includes("text/event-stream") && !acceptHeader.includes("application/json"))) {
     console.log(`🔄 Routing to SSE stream handler`);
     handleSSEStream(req, res);
@@ -380,32 +388,18 @@ app.post("/mcp", async (req: Request, res: Response) => {
 
       console.log(`📦 Response prepared:`, JSON.stringify(response, null, 2));
 
-      // Check if we have an SSE session to send the response through
-      const client = newSessionId ? sessions.get(newSessionId) : null;
+      // Always send JSON response directly (HTTP mode, not SSE)
+      // This makes it compatible with API Gateway and ElevenLabs Streamable HTTP
+      console.log(`📤 Sending direct JSON response${newSessionId ? ` with session ID: ${newSessionId}` : ''}`);
+      console.log(`📊 Active sessions: ${sessions.size}`);
       
-      if (client) {
-        // Send response via SSE stream
-        console.log(`📤 Sending response via SSE for session: ${newSessionId}`);
-        console.log(`📊 Active sessions: ${sessions.size}, Session exists: ${!!client}`);
-        sendSSEMessage(client, response);
-        
-        // Don't send body - just 202 Accepted status
-        console.log(`✅ Sent 202 Accepted (no body)`);
-        res.status(202).end();
-      } else {
-        // No SSE session - fall back to direct JSON response
-        // This is allowed for clients that don't use SSE
-        console.log(`📤 Sending direct JSON response (no SSE session)${newSessionId ? ` with session ID: ${newSessionId}` : ''}`);
-        console.log(`📊 Active sessions: ${sessions.size}`);
-        
-        // Always set session ID header if we have one (especially for initialize)
-        if (newSessionId) {
-          res.setHeader("Mcp-Session-Id", newSessionId);
-          console.log(`🔖 Set Mcp-Session-Id header: ${newSessionId}`);
-        }
-        
-        res.json(response);
+      // Always set session ID header if we have one (especially for initialize)
+      if (newSessionId) {
+        res.setHeader("Mcp-Session-Id", newSessionId);
+        console.log(`🔖 Set Mcp-Session-Id header: ${newSessionId}`);
       }
+      
+      res.json(response);
       
     } catch (handlerError) {
       console.error("❌ Handler error:", handlerError);
