@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "tsx src/index.ts",
     "build": "tsc -p tsconfig.json",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "test:patience": "tsx src/test-patience.ts",
+    "test:patience:interactive": "tsx src/test-patience.ts --interactive"
   },
   "dependencies": {
     "@langchain/core": "^0.3.0",

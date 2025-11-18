@@ -2,6 +2,7 @@ import { StateGraph, START, END, Annotation } from "@langchain/langgraph";
 import { speechToTextNode } from "./nodes/speechToText.js";
 import { healthCheckNode } from "./nodes/healthCheck.js";
 import { intentDetectionNode } from "./nodes/intentDetection.js";
+import { patienceCheckNode, routeAfterPatienceCheck } from "./nodes/patienceCheck.js";
 import { mcpCallNode } from "./nodes/mcpCall.js";
 import { textToSpeechNode } from "./nodes/textToSpeech.js";
 
@@ -23,6 +24,11 @@ export const VoiceAgentAnnotation = Annotation.Root({
   responseText: Annotation<string | undefined>(),
   audioResponse: Annotation<Buffer | undefined>(),
   error: Annotation<string | undefined>(),
+  // Patience system: tracks off-topic questions
+  offTopicCount: Annotation<number>({
+    reducer: (current: number, update: number) => current + update,
+    default: () => 0,
+  }),
 });
 
 /**
@@ -44,6 +50,7 @@ export function createVoiceAgentGraph() {
     .addNode("speechToText", speechToTextNode)
     .addNode("healthCheck", healthCheckNode)
     .addNode("intentDetection", intentDetectionNode)
+    .addNode("patienceCheck", patienceCheckNode)
     .addNode("mcpCall", mcpCallNode)
     .addNode("textToSpeech", textToSpeechNode)
     // Define edges
@@ -53,7 +60,11 @@ export function createVoiceAgentGraph() {
       intentDetection: "intentDetection",
       __end__: END,
     })
-    .addEdge("intentDetection", "mcpCall")
+    .addEdge("intentDetection", "patienceCheck")
+    .addConditionalEdges("patienceCheck", routeAfterPatienceCheck, {
+      mcpCall: "mcpCall",
+      textToSpeech: "textToSpeech",
+    })
     .addEdge("mcpCall", "textToSpeech")
     .addEdge("textToSpeech", END);
 
